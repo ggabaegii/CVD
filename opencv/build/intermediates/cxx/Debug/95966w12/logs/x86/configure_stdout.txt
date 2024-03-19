@@ -12,4 +12,4 @@
 -- Detecting CXX compile features - done
 -- Configuring done
 -- Generating done
--- Build files have been written to: C:/color/opencv/.cxx/Debug/95966w12/x86
+-- Build files have been written to: C:/color/CVD/opencv/.cxx/Debug/95966w12/x86

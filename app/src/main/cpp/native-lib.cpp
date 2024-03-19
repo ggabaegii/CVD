@@ -1,12 +1,12 @@
 #include <jni.h>
-#include <string>
+#include <opencv2/opencv.hpp>
 
-extern "C" JNIEXPORT jstring
+using namespace cv;
 
-JNICALL
-Java_com_example_cvd_MainActivity_stringFromJNI(
-        JNIEnv *env,
-        jobject /* this */) {
-    std::string hello = "Hello from C++";
-    return env->NewStringUTF(hello.c_str());
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_CVD_MainActivity_ConvertRGBtoHSV(JNIEnv *env, jobject thiz,
+                                                                 jlong mat_addr_input,
+                                                                 jlong mat_addr_result){
+
 }
