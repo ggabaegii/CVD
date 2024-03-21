@@ -1,2 +1,2 @@
-ninja: Entering directory `C:\color\CVD\opencv\.cxx\Debug\95966w12\arm64-v8a'
+ninja: Entering directory `C:\color\opencv\.cxx\Debug\95966w12\arm64-v8a'
 ninja: no work to do.

@@ -94,10 +94,6 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("checking", String.valueOf(uri));
 
 
-                        //Bundle extras = result.getData().getExtras();
-                        //bitmap = (Bitmap) extras.get("data");
-                        //imageView.setImageBitmap(bitmap);
-                        //Glide.with(MainActivity.this).load(uri).into(imageView);
 
 
                         //edit 화면으로 넘어가는 코드
@@ -109,6 +105,31 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+                    }
+                }
+            });
+
+    ActivityResultLauncher<Intent> activityResultPicture = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+
+                    //결과 OK , 데이터 null 아니면
+                    if( result.getResultCode() == RESULT_OK && result.getData() != null){
+
+                        Bundle extras = result.getData().getExtras();
+
+                        bitmap = (Bitmap) extras.get("data");
+
+                        //imageView.setImageBitmap(bitmap);
+
+
+                        Intent editIntent = new Intent(getApplicationContext(), edit.class);
+
+                        assert uri != null;
+                        editIntent.putExtra("imageUri", uri.toString()); //imageUri.toString
+                        startActivity(editIntent);
                     }
                 }
             });
@@ -139,14 +160,19 @@ public class MainActivity extends AppCompatActivity {
         bt_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent,CAMERA_CODE);
-            }
-        });
 
-        Intent intent=new Intent(getApplicationContext(),edit.class);
-        startActivity(intent);
+                bt_camera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        activityResultPicture.launch(intent);
+                    }
+
+                });
+        }
+    });
     }
+
 
 
 

@@ -1,6 +1,6 @@
 @echo off
 "C:\\Users\\sogo0\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\cmake.exe" ^
-  "-HC:\\color\\CVD\\opencv\\libcxx_helper" ^
+  "-HC:\\color\\opencv\\libcxx_helper" ^
   "-DCMAKE_SYSTEM_NAME=Android" ^
   "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON" ^
   "-DCMAKE_SYSTEM_VERSION=21" ^
@@ -11,9 +11,9 @@
   "-DCMAKE_ANDROID_NDK=C:\\Users\\sogo0\\AppData\\Local\\Android\\Sdk\\ndk\\25.1.8937393" ^
   "-DCMAKE_TOOLCHAIN_FILE=C:\\Users\\sogo0\\AppData\\Local\\Android\\Sdk\\ndk\\25.1.8937393\\build\\cmake\\android.toolchain.cmake" ^
   "-DCMAKE_MAKE_PROGRAM=C:\\Users\\sogo0\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe" ^
-  "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=C:\\color\\CVD\\opencv\\build\\intermediates\\cxx\\Debug\\95966w12\\obj\\x86_64" ^
-  "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=C:\\color\\CVD\\opencv\\build\\intermediates\\cxx\\Debug\\95966w12\\obj\\x86_64" ^
+  "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=C:\\color\\opencv\\build\\intermediates\\cxx\\Debug\\95966w12\\obj\\x86_64" ^
+  "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=C:\\color\\opencv\\build\\intermediates\\cxx\\Debug\\95966w12\\obj\\x86_64" ^
   "-DCMAKE_BUILD_TYPE=Debug" ^
-  "-BC:\\color\\CVD\\opencv\\.cxx\\Debug\\95966w12\\x86_64" ^
+  "-BC:\\color\\opencv\\.cxx\\Debug\\95966w12\\x86_64" ^
   -GNinja ^
   "-DANDROID_STL=c++_shared"

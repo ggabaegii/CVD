@@ -5,7 +5,7 @@
 # Sets the minimum CMake version required for this project.
 cmake_minimum_required(VERSION 3.22.1)
 
-set(pathPROJECT C:/color/CVD) # 수정필요
+set(pathPROJECT C:/color) # 수정필요
 set(pathOPENCV ${pathPROJECT}/opencv)
 set(pathLIBOPENCV_JAVA ${pathOPENCV}/native/libs/${ANDROID_ABI}/libopencv_java4.so)
 
