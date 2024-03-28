@@ -50,20 +50,21 @@
 
     <ImageView
         android:id="@+id/hsv_imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="350dp"
+        android:layout_height="450dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name_auto"
         app:srcCompat="@drawable/rectangle_2" />
 
+
     <SeekBar
         android:id="@+id/Bar_H"
-        android:layout_width="260dp"
+        android:layout_width="300dp"
         android:layout_height="20dp"
         android:layout_marginTop="16dp"
-        android:max="50"
+        android:max="360"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.671"
 
@@ -71,25 +72,25 @@
         app:layout_constraintTop_toBottomOf="@+id/hsv_imageView" />
 
     <SeekBar
-        android:id="@+id/Bar_S"
-        android:layout_width="260dp"
+        android:id="@+id/Bar_V"
+        android:layout_width="300dp"
         android:layout_height="20dp"
         android:layout_marginTop="8dp"
-        android:max="50"
+        android:max="100"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.671"
 
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Bar_V"
+        app:layout_constraintTop_toBottomOf="@+id/Bar_S"
         app:layout_constraintVertical_bias="0.016" />
 
     <SeekBar
-        android:id="@+id/Bar_V"
-        android:layout_width="260dp"
+        android:id="@+id/Bar_S"
+        android:layout_width="300dp"
         android:layout_height="20dp"
         android:layout_marginTop="8dp"
-        android:max="50"
+        android:max="100"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.671"
