@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -24,6 +26,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cvd.databinding.ActivityMainBinding;
 
@@ -31,9 +35,7 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 
 import java.io.ByteArrayOutputStream;
-
-
-
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -47,6 +49,12 @@ public class MainActivity extends AppCompatActivity {
     Bitmap bitmap;
     Uri uri;
     int SELECT_CODE = 100, CAMERA_CODE=101;
+
+    PhotoBookDB db;
+    ArrayList<PhotoBook> photoList = new ArrayList<>();
+    RecyclerView recyclerView;
+    PhotoBookAdapter adapter;
+    TextView noDataText;
 
     private ActivityMainBinding binding;
 
@@ -156,6 +164,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void camera() {
+    }
+
+
+
+        /*
         bt_camera = findViewById(R.id.btn_camera);
         bt_camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
         }
     });
     }
+        */
 
 
 
@@ -184,6 +198,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.menu.menu);
 
+        setContentView(R.layout.activity_main);
+        //데이터 유무 텍스트
+        noDataText = findViewById(R.id.noData_text);
+        //리스트 보여줄 화면
+        recyclerView = findViewById(R.id.recyclerView);
+        //어뎁터
+        adapter = new PhotoBookAdapter(MainActivity.this);
+        //어뎁터 등록
+        recyclerView.setAdapter(adapter);
+        //레이아웃 설정
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        //DB 생성
+        db = new PhotoBookDB(MainActivity.this);
+        //데이터 가져오기
+        storeDataInArrays();
+
+
+/*
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -196,6 +228,36 @@ public class MainActivity extends AppCompatActivity {
         // Example of a call to a native method
         //TextView tv = binding.sampleText;
         //tv.setText(stringFromJNI());
+
+ */
+    }
+
+    /**
+     * 데이터 가져오기
+     */
+    void storeDataInArrays(){
+
+        Cursor cursor = db.readAllData();
+
+        if(cursor.getCount() == 0){
+            noDataText.setVisibility(noDataText.VISIBLE);
+        }else{
+
+            noDataText.setVisibility(noDataText.GONE);
+
+            while (cursor.moveToNext()){
+
+                PhotoBook photo = new PhotoBook(cursor.getString(0),
+                        cursor.getBlob(1));
+
+                //데이터 등록
+                photoList.add(photo);
+                adapter.addItem(photo);
+
+                //적용
+                adapter.notifyDataSetChanged();
+            }
+        }
     }
 
 
