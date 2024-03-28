@@ -37,65 +37,28 @@ public class AddActivity extends AppCompatActivity {
         imageView = findViewById(R.id.imageView);
 
 
-        Button Btn_camera = findViewById(R.id.btn_camera); //사진찍기 버튼
-        Button Btn_gallery = findViewById(R.id.btn_gallery);//사진선택 버튼
 
-        //사진찍기
-        Btn_camera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                activityResultPicture.launch(intent);
-            }
-        });
 
-        //사진선택
-        Btn_gallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                activityResultSelect.launch(intent);
-            }
-        });
+
 
         //저장버튼
-        Button addBtn = findViewById(R.id.add_btn);
+        Button addBtn = findViewById(R.id.edit_btn);
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 //입력값 변수에 담기
-                String name = addNameEdit.getText().toString();
                 String photo = addPhotoEdit.getText().toString();
-
-                byte[] data = imageViewToByte(imageView);
-
+                Uri imageUri =
                 //DB 객체 생성
                 PhotoBookDB addressDB = new PhotoBookDB(AddActivity.this);
 
                 //DB에 저장하기
-                addressDB.addPhotoNumber(name, photo, data);
+                uri.toString();
+                addressDB.addPhotoNumber(photo, data);
             }
         });
     }
-
-    //사진 찍기
-    ActivityResultLauncher<Intent> activityResultPicture = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if( result.getResultCode() == RESULT_OK && result.getData() != null){
-
-                        Bundle extras = result.getData().getExtras();
-
-                        bitmap = (Bitmap) extras.get("data");
-
-                        imageView.setImageBitmap(bitmap);
-                    }
-                }
-            });
 
     //사진 가져오기
     ActivityResultLauncher<Intent> activityResultSelect = registerForActivityResult(
@@ -110,7 +73,7 @@ public class AddActivity extends AppCompatActivity {
 
                             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
 
-                            imageView.setImageBitmap(bitmap);
+                            imageView.setImageURI(uri);
 
                         }catch (FileNotFoundException e){
                             e.printStackTrace();
@@ -120,19 +83,4 @@ public class AddActivity extends AppCompatActivity {
                     }
                 }
             });
-
-    /**
-     * 이미지 바이트로 변환
-     * @param image 이미지
-     * @return
-     */
-
-    public static byte[] imageViewToByte(ImageView image) {
-
-        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream =  new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
-    }
 }

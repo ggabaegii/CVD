@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.widget.Toast;
 
 public class PhotoBookDB extends SQLiteOpenHelper {
@@ -75,7 +76,7 @@ public class PhotoBookDB extends SQLiteOpenHelper {
      * @param name        //이름
      * @param photo_photo // 사진
      */
-    public void addPhotoNumber(String name, String photo_number, byte[] photo_photo) {
+    public void addPhotoNumber(String name, String photo_photo) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
