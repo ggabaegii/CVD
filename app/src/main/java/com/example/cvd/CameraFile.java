@@ -13,17 +13,12 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,7 +27,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class AddActivity extends AppCompatActivity {
+public class CameraFile extends AppCompatActivity {
 
     Uri uri;
 
@@ -46,7 +41,7 @@ public class AddActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add);
+
 
         imageView = findViewById(R.id.imageView);
 
@@ -56,23 +51,14 @@ public class AddActivity extends AppCompatActivity {
         imageView.setImageURI(image);
 
 
-        //편집 버튼
-        Button addBtn = findViewById(R.id.edit_btn);
-        addBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent editIntent = new Intent(getApplicationContext(), edit.class);
-                editIntent.putExtra("imageUri", currentPhotoUri.toString()); //imageUri.toString
-                startActivity(editIntent);
-                }
-            });
 
 
 
-        Button reactBtn = findViewById(R.id.react_btn);
-        reactBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+
+
+
+
+
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (cameraIntent.resolveActivity((getPackageManager())) != null) {
 
@@ -88,8 +74,7 @@ public class AddActivity extends AppCompatActivity {
                     }
                 }
             }
-        });
-    }
+
 
 
     ActivityResultLauncher<Intent> activityResultCamera = registerForActivityResult(
