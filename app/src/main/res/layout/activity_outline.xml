@@ -1,81 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F7D2C3"
     tools:context=".outline">
 
-    <TextView
-        android:id="@+id/title_outline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="외곽선"
-        android:textSize="24sp"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.021" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/name_outline"
-        android:layout_width="230dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="8dp"
-        android:layout_weight="1"
-        android:ems="10"
-        android:inputType="textShortMessage"
-        android:hint="제목입력"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.274"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_outline" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/save_outline"
-        android:layout_width="74dp"
-        android:layout_height="54dp"
-        android:text="저장"
-        app:layout_constraintBottom_toBottomOf="@+id/name_outline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.296"
-        app:layout_constraintStart_toEndOf="@+id/name_outline"
-        app:layout_constraintTop_toBottomOf="@+id/title_outline"
-        app:layout_constraintVertical_bias="1.0" />
+            <TextView
+                android:id="@+id/title_outline_text"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:fontFamily="@font/school"
+                android:gravity="center"
+                android:text="외곽선"
+                android:textColor="#686868"
+                android:textSize="34sp" />
 
-    <ImageView
-        android:id="@+id/outline_imageView"
-        android:layout_width="350dp"
-        android:layout_height="450dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_outline"
-        app:srcCompat="@drawable/rectangle_2" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="650dp">
 
-    <Button
-        android:id="@+id/change_outline"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="24dp"
-        android:text="보정"
-        app:layout_constraintEnd_toStartOf="@+id/return_outline"
-        app:layout_constraintHorizontal_bias="0.433"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/outline_imageView" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout"
+                    android:layout_width="382dp"
+                    android:layout_height="509dp"
+                    android:layout_marginHorizontal="50dp"
+                    android:background="@drawable/square"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/return_outline"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="50dp"
-        android:text="원본"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/change_outline" />
+                    <ImageView
+                        android:id="@+id/outline_imageView"
+                        android:layout_width="339dp"
+                        android:layout_height="488dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.511"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.476"
+                        app:srcCompat="@drawable/rectangle_2" />
 
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    tools:layout_editor_absoluteY="650dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="vertical">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <EditText
+                                android:id="@+id/name_outline"
+                                android:layout_width="wrap_content"
+                                android:layout_height="48dp"
+                                android:ems="10"
+                                android:fontFamily="@font/school"
+                                android:inputType="text"
+                                android:text="제목 입력"
+                                android:textColor="#424242"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@+id/save_outline"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_bias="0.8" />
+
+                            <Button
+                                android:id="@+id/save_outline"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="저장"
+                                android:fontFamily="@font/school"
+                                android:textSize="16sp"
+                                android:background="#BFA398"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/name_outline"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/back_btn"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/change_outline"
+                                android:layout_width="70dp"
+                                android:layout_height="46dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@android:drawable/stat_notify_sync" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="0.5"
+                        android:background="@drawable/back_btn"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/return_outline"
+                                android:layout_width="70dp"
+                                android:layout_height="50dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@android:drawable/ic_menu_revert" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

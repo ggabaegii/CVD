@@ -16,9 +16,9 @@ import com.bumptech.glide.Glide;
 
 public class edit extends AppCompatActivity {
 
-    Button btn_hsv;
-    Button btn_auto;
-    Button btn_outline;
+    ImageView btn_hsv;
+    ImageView btn_auto;
+    ImageView btn_outline;
 
     ImageView imageInput;
 
