@@ -1,40 +1,29 @@
 package com.example.cvd;
 
+import android.net.Uri;
+
 public class PhotoBook {
-    private String photo_name; //이름
-    private byte[] photo_image; //사진
-    //private byte[] photo_origin; //원본사진
+    private String title;
+    private Uri uri;
 
-    public PhotoBook(String photo_name, byte[] photo_image) {
-        this.photo_name = photo_name;
-        this.photo_image = photo_image;
-        //this.photo_origin = photo_origin;
+    public PhotoBook(String title, Uri uri) {
+        this.title = title;
+        this.uri = uri;
     }
 
-
-    public String getPhoto_name() {
-        return photo_name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setPhoto_name(String photo_name) {
-        this.photo_name = photo_name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public byte[] getPhoto_image() {
-        return photo_image;
+    public Uri getUri() {
+        return uri;
     }
 
-    public void setPhoto_image(byte[] photo_image) {
-        this.photo_image = photo_image;
+    public void setUri(Uri uri) {
+        this.uri = uri;
     }
-
-    /*public byte[] getPhoto_origin() {
-        return photo_origin;
-    }
-
-    public void setPhoto_origin(byte[] photo_origin) {
-        this.photo_origin = photo_origin;
-    }
-    )
-     */
 }

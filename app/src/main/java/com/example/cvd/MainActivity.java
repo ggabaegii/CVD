@@ -3,17 +3,21 @@ package com.example.cvd;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -35,14 +39,11 @@ import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity {
-
     private static final String TAG = "opencv";
-
     static Uri currentPhotoUri;
-
-
-
-
+    private static final int REQUEST_CODE = 1;
+    private ImageView imageView;
+    private boolean permissionChecked = false; // 권한 확인 여부를 저장하는 변수
     PhotoBookDB db;
     ArrayList<PhotoBook> photoList = new ArrayList<>();
     RecyclerView recyclerView;
@@ -51,13 +52,10 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
 
-
-
     static {
         System.loadLibrary("opencv_java4");
         System.loadLibrary("native-lib");
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -89,9 +87,17 @@ public class MainActivity extends AppCompatActivity {
 
     //메뉴에서 갤러리 버튼 선택 시 수행.
     private void gallery() {
+        /*
         Intent galleryintent = new Intent(Intent.ACTION_PICK);
         galleryintent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
         activityResultPicture.launch(galleryintent);
+
+         */
+
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+        galleryIntent.setType("image/*");
+        Intent chooser = Intent.createChooser(galleryIntent, "Select Picture");
+        activityResultPicture.launch(chooser);
     }
     /*
     //메뉴에서 카메라 버튼 선택 시 수행.
@@ -103,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     */
+
 
     private void camera() throws IOException {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -145,11 +152,13 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("checking", String.valueOf(uri));
 
 
-                        //edit 화면으로 넘어가는 코드
-                        Intent editIntent = new Intent(getApplicationContext(), edit.class);
-                        assert uri != null;
-                        editIntent.putExtra("imageUri", uri.toString()); //imageUri.toString
-                        startActivity(editIntent);
+                        // edit 화면으로 넘어가는 코드
+                        if (uri != null) {
+                            getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            Intent editIntent = new Intent(getApplicationContext(), edit.class);
+                            editIntent.putExtra("imageUri", uri.toString());
+                            startActivity(editIntent);
+                        }
                     }
                 }
             });
@@ -191,10 +200,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.menu.menu);
         setContentView(R.layout.activity_main);
-
-        // 권한 확인 및 요청
-        getPermission();
-
+        // 이전에 권한을 확인했는지 여부를 확인하고, 확인하지 않았다면 권한을 요청
+        if (!permissionChecked) {
+            // 권한 확인 및 요청
+            getPermission();
+        }
         //데이터 유무 텍스트
         noDataText = findViewById(R.id.noData_text);
         //리스트 보여줄 화면
@@ -215,20 +225,19 @@ public class MainActivity extends AppCompatActivity {
     /**
      * 데이터 가져오기
      */
-    void storeDataInArrays(){
+    void storeDataInArrays() {
 
         Cursor cursor = db.readAllData();
 
-        if(cursor.getCount() == 0){
+        if (cursor.getCount() == 0) {
             noDataText.setVisibility(noDataText.VISIBLE);
-        }else{
+        } else {
 
             noDataText.setVisibility(noDataText.GONE);
 
-            while (cursor.moveToNext()){
+            while (cursor.moveToNext()) {
 
-                PhotoBook photo = new PhotoBook(cursor.getString(0),
-                        cursor.getBlob(1));
+                PhotoBook photo = new PhotoBook(cursor.getString(1), Uri.parse(cursor.getString(2)));
 
                 //데이터 등록
                 photoList.add(photo);
@@ -239,7 +248,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 
 
     @SuppressLint("NewApi")
@@ -256,52 +264,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        /*if(requestCode == 1000) {
-            boolean check_result = true;
-
+        if (requestCode == 1000) {
+            boolean allPermissionsGranted = true;
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
-                    check_result = false;
+                    allPermissionsGranted = false;
                     break;
                 }
             }
-
-            if (check_result == true) {
-
-            }
-
-            else {
-                finish();;
-            }
-        }
-        */
-
-        /*if(requestCode==102&&grantResults.length>0){
-            if(grantResults[0] != PackageManager.PERMISSION_GRANTED){
-                getPermission();
-            }
-        }
-
-        if(requestCode==103&&grantResults.length>0){
-            if(grantResults[0] != PackageManager.PERMISSION_GRANTED){
-                getPermission();
+            // 권한 확인 여부를 업데이트하고, 거부된 경우에만 사용자에게 알림
+            permissionChecked = true;
+            if (!allPermissionsGranted) {
+                new AlertDialog.Builder(this)
+                        .setTitle("권한 필요")
+                        .setMessage("이 앱을 사용하려면 필요한 권한을 부여해야 합니다.")
+                        .setPositiveButton("설정", (dialog, which) -> {
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                    Uri.fromParts("package", getPackageName(), null));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        })
+                        .setNegativeButton("취소", (dialog, which) -> {
+                            Toast.makeText(this, "권한이 거부되었습니다. 일부 기능이 제한됩니다.", Toast.LENGTH_SHORT).show();
+                        })
+                        .show();
             }
         }
 
-        if(requestCode==104&&grantResults.length>0){
-            if(grantResults[0] != PackageManager.PERMISSION_GRANTED){
-                getPermission();
-            }
-        }
-
-         */
     }
-
-    //public native String stringFromJNI();
-
-
 }
