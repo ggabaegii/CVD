@@ -3,4 +3,7 @@
     <external-files-path
         name="external-files_images"
         path="images/" />
+    <external-path
+        name="my_images"
+        path="Android/data/com.example.cvd/files/Pictures" />
 </paths>

@@ -28,127 +28,25 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CameraFile extends AppCompatActivity {
-
-    Uri uri;
-
     ImageView imageView;
-    static File currentPhotoFile;
     static Uri currentPhotoUri;
-    static String currentPhotoPath;
     static String currentPhotoFileName;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_edit);
 
         imageView = findViewById(R.id.imageView);
 
         String imageUriString = getIntent().getStringExtra("imageUri");
-        Uri image = Uri.parse(imageUriString);
+        currentPhotoUri = Uri.parse(imageUriString);
+        imageView.setImageURI(currentPhotoUri);
 
-        imageView.setImageURI(image);
-
-
-
-
-
-
-
-
-
-
-                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (cameraIntent.resolveActivity((getPackageManager())) != null) {
-
-                    File imageFile = null;
-                    try {
-                        imageFile = createImageFile();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    if (imageFile != null) {
-                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, currentPhotoUri);
-                        activityResultCamera.launch(cameraIntent);
-                    }
-                }
-            }
-
-
-
-    ActivityResultLauncher<Intent> activityResultCamera = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK /*&& result.getData() != null*/) {
-
-                        Intent intent = result.getData();
-                        Uri uri = intent.getData();
-
-                        //로깅
-                        Log.i("checking", String.valueOf(uri));
-
-
-                        //edit 화면으로 넘어가는 코드
-                        Intent editIntent = new Intent(getApplicationContext(), edit.class);
-                        assert uri != null;
-                        editIntent.putExtra("imageUri", uri.toString()); //imageUri.toString
-                        startActivity(editIntent);
-                    }
-                }
-            });
-
-    ActivityResultLauncher<Intent> activityResult = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK /*&& result.getData() != null*/) {
-
-                        Intent intent = result.getData();
-                        Uri uri = intent.getData();
-
-                        //로깅
-                        Log.i("checking", String.valueOf(uri));
-
-
-                        //add 화면으로 넘어가는 코드
-                        Intent editIntent = new Intent(getApplicationContext(), edit.class);
-                        assert uri != null;
-                        editIntent.putExtra("imageUri", uri.toString()); //imageUri.toString
-                        startActivity(editIntent);
-                    }
-                }
-            });
-
-
-    //이미지파일 생성
-    private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-
-        File imagePath = getExternalFilesDir("images");
-
-        File newFile = File.createTempFile(imageFileName, ".jpg", imagePath);
-
-        currentPhotoFile = newFile;
-        currentPhotoFileName = newFile.getName();
-        currentPhotoPath = newFile.getAbsolutePath();
-
-        try {
-            currentPhotoUri = FileProvider.getUriForFile(this,
-                    getApplicationContext().getPackageName() + ".fileprovider",
-                    newFile);
-        } catch (Exception ex) {
-            Log.d("FileProvider", ex.getMessage());
-            ex.printStackTrace();
-            throw ex;
-        }
-
-        return newFile;
+        // 이미지 파일을 갤러리에 추가
+        galleryAddPic(currentPhotoUri, currentPhotoFileName);
     }
+
 
     //갤러리에 이미지 파일 생성
     private Uri galleryAddPic(Uri srcImageFileUri ,String srcImageFileName) {

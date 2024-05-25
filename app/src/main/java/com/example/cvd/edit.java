@@ -33,17 +33,14 @@ public class edit extends AppCompatActivity {
         imageInput = findViewById(R.id.imageView);
         imageInput.setImageURI(image);
 
-
-
         Log.i("image",String.valueOf(image));
-
-
 
 
         btn_hsv=findViewById(R.id.btn_hsv);
         btn_hsv.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 Intent intent=new Intent(getApplicationContext(),HSV.class);
+                intent.putExtra("imageUri", image.toString());
                 startActivity(intent);
 
             }
@@ -53,6 +50,7 @@ public class edit extends AppCompatActivity {
         btn_auto.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 Intent intent=new Intent(getApplicationContext(),auto.class);
+                intent.putExtra("imageUri", image.toString());
                 startActivity(intent);
             }
         });
@@ -61,6 +59,7 @@ public class edit extends AppCompatActivity {
         btn_outline.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 Intent intent=new Intent(getApplicationContext(),outline.class);
+                intent.putExtra("imageUri", image.toString());
                 startActivity(intent);
             }
         });
