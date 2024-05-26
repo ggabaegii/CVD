@@ -224,6 +224,8 @@ public class MainActivity extends AppCompatActivity {
         db = new PhotoBookDB(MainActivity.this);
         //데이터 가져오기
         storeDataInArrays();
+
+        //슬라이드로 사진 삭제하기 기능
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
