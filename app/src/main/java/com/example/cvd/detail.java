@@ -13,7 +13,7 @@ public class detail extends AppCompatActivity {
     ImageView imageView;
     Uri imageUri;
     EditText editTitle;
-    Button changeBtn;
+    Button updateBtn;
     String oldTitle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,11 +22,11 @@ public class detail extends AppCompatActivity {
 
         imageView = findViewById(R.id.detail_imageView);
         editTitle = findViewById(R.id.name_detail);
-        changeBtn = findViewById(R.id.change_detail);
+        updateBtn = findViewById(R.id.update_detail);
 
         getAndSetIntentData();
 
-        changeBtn.setOnClickListener(new View.OnClickListener() {
+        updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String newTitle = editTitle.getText().toString();

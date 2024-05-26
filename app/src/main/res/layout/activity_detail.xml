@@ -26,7 +26,7 @@
                 android:layout_height="65dp"
                 android:fontFamily="@font/school"
                 android:gravity="center"
-                android:text="상세목록"
+                android:text="상세 화면"
                 android:textColor="#686868"
                 android:textSize="34sp" />
 
@@ -84,16 +84,16 @@
                                 android:text="제목 입력"
                                 android:textColor="#424242"
                                 app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toStartOf="@+id/change_detail"
+                                app:layout_constraintEnd_toStartOf="@+id/update_detail"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintVertical_bias="0.8" />
 
                             <Button
-                                android:id="@+id/change_detail"
+                                android:id="@+id/update_detail"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="수정"
+                                android:text="저장"
                                 android:fontFamily="@font/school"
                                 android:textSize="16sp"
                                 android:background="#BFA398"
@@ -103,6 +103,36 @@
                                 app:layout_constraintTop_toTopOf="parent" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+                    <LinearLayout
+                        android:layout_width="113dp"
+                        android:layout_height="46dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/back_btn"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/change_detail"
+                            android:layout_width="60dp"
+                            android:layout_height="40dp"
+                            app:srcCompat="@android:drawable/stat_sys_download" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
