@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Canvas;
@@ -318,7 +319,10 @@ public class MainActivity extends AppCompatActivity {
             }
             // 권한 확인 여부를 업데이트하고, 거부된 경우에만 사용자에게 알림
             permissionChecked = true;
-            if (!allPermissionsGranted) {
+            SharedPreferences sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE);
+            boolean permissionRequestedBefore = sharedPreferences.getBoolean("permission_requested_before", false);
+
+            if (!allPermissionsGranted && !permissionRequestedBefore) {
                 new AlertDialog.Builder(this)
                         .setTitle("권한 필요")
                         .setMessage("이 앱을 사용하려면 필요한 권한을 부여해야 합니다.")
@@ -332,8 +336,12 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(this, "권한이 거부되었습니다. 일부 기능이 제한됩니다.", Toast.LENGTH_SHORT).show();
                         })
                         .show();
+
+                // 권한 요청 알림이 표시된 상태를 저장
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("permission_requested_before", true);
+                editor.apply();
             }
         }
-
     }
 }
