@@ -21,6 +21,9 @@
         android:theme="@style/Theme.CVD"
         tools:targetApi="31">
         <activity
+            android:name=".detail"
+            android:exported="false" />
+        <activity
             android:name=".outline"
             android:exported="false" />
         <activity

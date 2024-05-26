@@ -1,6 +1,7 @@
 package com.example.cvd;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +32,19 @@ public class PhotoBookAdapter extends RecyclerView.Adapter<PhotoBookAdapter.MyVi
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         PhotoBook photo = photoList.get(position);
         holder.name_text.setText(photo.getTitle()); // 사진 제목 설정
+        holder.imageView.setImageURI(photo.getUri()); // URI를 통해 이미지 설정
 
-        // URI를 통해 이미지 설정
-        holder.imageView.setImageURI(photo.getUri());
+
+        // 상세 화면으로 이동
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 Intent intent = new Intent(context, detail.class);
+                 intent.putExtra("title", photo.getTitle());
+                 intent.putExtra("imageUri", photo.getUri().toString());
+                 context.startActivity(intent);
+             }
+        });
     }
 
     @Override
