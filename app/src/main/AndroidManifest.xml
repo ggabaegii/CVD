@@ -28,16 +28,14 @@
         <activity
             android:name=".outline"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".edit"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".CameraFile"
             android:exported="false" />
         <activity
             android:name=".HSV"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".edit"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".edit"
             android:exported="true"
@@ -46,8 +44,7 @@
         <activity
             android:name=".auto"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".edit"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation"

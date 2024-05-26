@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 public class PhotoBookDB extends SQLiteOpenHelper {
 
@@ -14,9 +15,12 @@ public class PhotoBookDB extends SQLiteOpenHelper {
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_TITLE = "title";
     private static final String COLUMN_URI = "uri";
+    private Context context;
 
     public PhotoBookDB(Context context) {
+
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -45,5 +49,14 @@ public class PhotoBookDB extends SQLiteOpenHelper {
     public Cursor readAllData() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+    }
+    public void deleteData(String title) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long result = db.delete(TABLE_NAME, "title=?", new String[]{title});
+        if (result == -1) {
+            Toast.makeText(context, "삭제 실패", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "삭제 완료", Toast.LENGTH_SHORT).show();
+        }
     }
 }
