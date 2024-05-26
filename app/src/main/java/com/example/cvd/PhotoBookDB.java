@@ -59,4 +59,17 @@ public class PhotoBookDB extends SQLiteOpenHelper {
             Toast.makeText(context, "삭제 완료", Toast.LENGTH_SHORT).show();
         }
     }
+    // 제목을 업데이트하는 메서드 추가
+    public void updateData(String oldTitle, String newTitle) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_TITLE, newTitle);
+
+        long result = db.update(TABLE_NAME, cv, "title=?", new String[]{oldTitle});
+        if (result == -1) {
+            Toast.makeText(context, "업데이트 실패", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "업데이트 완료", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
