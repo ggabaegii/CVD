@@ -2,12 +2,19 @@ package com.example.cvd;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import java.io.OutputStream;
 
 public class detail extends AppCompatActivity {
     ImageView imageView;
@@ -15,6 +22,7 @@ public class detail extends AppCompatActivity {
     EditText editTitle;
     Button updateBtn;
     String oldTitle;
+    ImageView downloadBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +31,7 @@ public class detail extends AppCompatActivity {
         imageView = findViewById(R.id.detail_imageView);
         editTitle = findViewById(R.id.name_detail);
         updateBtn = findViewById(R.id.update_detail);
+        downloadBtn = findViewById(R.id.download_imageView);
 
         getAndSetIntentData();
 
@@ -34,7 +43,36 @@ public class detail extends AppCompatActivity {
                 db.updateData(oldTitle, newTitle);
             }
         });
+        downloadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveImageToGallery();
+            }
+        });
     }
+        private void saveImageToGallery() {
+            BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+            Bitmap bitmap = drawable.getBitmap();
+            OutputStream fos;
+
+            try {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.DISPLAY_NAME, "Image_" + System.currentTimeMillis() + ".jpg");
+                values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+                values.put(MediaStore.Images.Media.RELATIVE_PATH, "DCIM/MyImages");
+
+                Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                fos = getContentResolver().openOutputStream(uri);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                fos.flush();
+                fos.close();
+
+                Toast.makeText(this, "다운로드 완료", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(this, "다운로드 실패", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+        }
 
     /**
      * 데이터 가져와서 화면에 보여주기
