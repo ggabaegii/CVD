@@ -4,7 +4,7 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#FFBEBE"
+    android:background="#E8E8E8"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
