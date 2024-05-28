@@ -10,7 +10,35 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recyclerView"/>
+        android:id="@+id/recyclerView"
+        android:layout_below="@id/sortOptions"
+        android:layout_marginTop="8dp"/>
+
+    <RadioGroup
+        android:id="@+id/sortOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/sortByTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="시간순" />
+
+        <RadioButton
+            android:id="@+id/sortByTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="제목순" />
+        <RadioButton
+            android:id="@+id/like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="좋아요" />
+    </RadioGroup>
 
     <TextView
         android:id="@+id/noData_text"

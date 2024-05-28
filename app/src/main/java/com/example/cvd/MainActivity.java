@@ -18,7 +18,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -223,6 +225,21 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         //DB 생성
         db = new PhotoBookDB(MainActivity.this);
+
+        //라디오 버튼
+        RadioGroup sortOptions = findViewById(R.id.sortOptions);
+        sortOptions.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.sortByTime) {
+                    storeDataInArrays("time");
+                } else if (checkedId == R.id.sortByTitle) {
+                    storeDataInArrays("title");
+                }
+            }
+        });
+
+        //storeDataInArrays("time");
         //데이터 가져오기
         storeDataInArrays();
 
@@ -268,28 +285,34 @@ public class MainActivity extends AppCompatActivity {
      * 데이터 가져오기
      */
     void storeDataInArrays() {
+        storeDataInArrays("time");
+    }
 
-        Cursor cursor = db.readAllData();
+    void storeDataInArrays(String sortOrder) {
+        Cursor cursor;
+        if (sortOrder.equals("title")) {
+            cursor = db.readAllDataTitle();
+        } else {
+            cursor = db.readAllData();
+        }
 
         if (cursor.getCount() == 0) {
-            noDataText.setVisibility(noDataText.VISIBLE);
+            noDataText.setVisibility(View.VISIBLE);
         } else {
-
-            noDataText.setVisibility(noDataText.GONE);
+            noDataText.setVisibility(View.GONE);
+            photoList.clear();
+            adapter.clearItems();
 
             while (cursor.moveToNext()) {
-
                 PhotoBook photo = new PhotoBook(cursor.getString(1), Uri.parse(cursor.getString(2)));
-
-                //데이터 등록
                 photoList.add(photo);
                 adapter.addItem(photo);
-
-                //적용
-                adapter.notifyDataSetChanged();
             }
+            //적용
+            adapter.notifyDataSetChanged();
         }
     }
+
 
 
     @SuppressLint("NewApi")

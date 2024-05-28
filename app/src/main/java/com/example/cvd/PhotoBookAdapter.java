@@ -74,4 +74,7 @@ public class PhotoBookAdapter extends RecyclerView.Adapter<PhotoBookAdapter.MyVi
             imageView = itemView.findViewById(R.id.photo_image);
         }
     }
+    public void clearItems() {
+        photoList.clear();
+    }
 }
