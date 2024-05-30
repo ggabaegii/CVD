@@ -77,14 +77,18 @@ public class outline extends AppCompatActivity {
             public void onClick(View v) {
                 String title = editTitle.getText().toString();
                 if (!title.isEmpty() && imageUri != null) {
-                    // Save the processed bitmap to a file
-                    String filePath = saveBitmapToFile(processedBitmap, title);
-                    if (filePath != null) {
-                        PhotoBookDB db = new PhotoBookDB(outline.this);
-                        db.addPhoto(title, filePath); // 이미지 파일 경로를 저장
-                        finish(); // 저장 후 종료
+                    PhotoBookDB db = new PhotoBookDB(outline.this);
+                    if (db.isTitleExists(title)) {
+                        Toast.makeText(outline.this, "이미 등록된 제목입니다", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(outline.this, "이미지 저장 중 오류 발생", Toast.LENGTH_SHORT).show();
+                        String filePath = saveBitmapToFile(processedBitmap, title);
+                        if (filePath != null) {
+                            //PhotoBookDB db = new PhotoBookDB(outline.this);
+                            db.addPhoto(title, filePath); // 이미지 파일 경로를 저장
+                            finish(); // 저장 후 종료
+                        } else {
+                            Toast.makeText(outline.this, "이미지 저장 중 오류 발생", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             }

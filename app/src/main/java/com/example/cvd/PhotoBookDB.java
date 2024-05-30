@@ -46,6 +46,15 @@ public class PhotoBookDB extends SQLiteOpenHelper {
         db.insert(TABLE_NAME, null, values);
     }
 
+    public boolean isTitleExists(String title) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = ?", new String[]{title});
+        boolean exists = (cursor.getCount() > 0);
+        cursor.close();
+        return exists;
+    }
+
+
     public Cursor readAllData() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
