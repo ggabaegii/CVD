@@ -137,7 +137,7 @@
                                 android:id="@+id/seekBar5"
                                 android:layout_width="255dp"
                                 android:layout_height="22dp"
-                                android:layout_marginStart="51dp"
+                                android:layout_marginStart="0dp"
                                 android:layout_marginTop="16dp"
                                 android:layout_marginEnd="22dp"
                                 android:theme="@style/SeekBarColor"
@@ -152,7 +152,7 @@
                                 android:id="@+id/seekBar6"
                                 android:layout_width="255dp"
                                 android:layout_height="22dp"
-                                android:layout_marginStart="51dp"
+                                android:layout_marginStart="0dp"
                                 android:layout_marginTop="5dp"
                                 android:layout_marginEnd="22dp"
                                 android:layout_marginBottom="5dp"
@@ -168,7 +168,7 @@
                                 android:id="@+id/seekBar7"
                                 android:layout_width="255dp"
                                 android:layout_height="22dp"
-                                android:layout_marginStart="51dp"
+                                android:layout_marginStart="0dp"
                                 android:layout_marginEnd="22dp"
                                 android:layout_marginBottom="16dp"
                                 android:theme="@style/SeekBarColor"
@@ -183,7 +183,7 @@
                                 android:id="@+id/textView2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="33dp"
+                                android:layout_marginStart="10dp"
                                 android:layout_marginTop="16dp"
                                 android:layout_marginEnd="8dp"
                                 android:text="H"
@@ -197,7 +197,7 @@
                                 android:id="@+id/textView3"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="33dp"
+                                android:layout_marginStart="10dp"
                                 android:layout_marginTop="5dp"
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginBottom="5dp"
@@ -212,7 +212,7 @@
                                 android:id="@+id/textView4"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="33dp"
+                                android:layout_marginStart="10dp"
                                 android:layout_marginEnd="8dp"
                                 android:layout_marginBottom="16dp"
                                 android:text="V"
@@ -221,6 +221,44 @@
                                 app:layout_constraintEnd_toStartOf="@+id/seekBar7"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+                            <!--SeekBar Text 뷰-->
+
+                            <TextView
+                                android:id="@+id/hueValueText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="18dp"
+                                android:fontFamily="@font/school"
+                                android:text=""
+                                app:layout_constraintStart_toEndOf="@+id/seekBar5"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/saturationValueText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="0dp"
+                                android:layout_marginEnd="0dp"
+                                android:layout_marginTop="10dp"
+                                android:fontFamily="@font/school"
+                                android:text=""
+                                app:layout_constraintTop_toBottomOf="@+id/hueValueText"
+                                app:layout_constraintStart_toEndOf="@+id/seekBar6"
+                                app:layout_constraintVertical_bias="0.296" />
+
+                            <TextView
+                                android:id="@+id/valueValueText"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="0dp"
+                                android:layout_marginEnd="0dp"
+                                android:layout_marginTop="10dp"
+                                android:fontFamily="@font/school"
+                                android:text=""
+                                app:layout_constraintStart_toEndOf="@+id/seekBar7"
+                                app:layout_constraintTop_toBottomOf="@+id/saturationValueText"
+                                tools:layout_editor_absoluteY="73dp" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </LinearLayout>
 

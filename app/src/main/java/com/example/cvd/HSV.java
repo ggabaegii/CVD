@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,6 +20,8 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HSV extends AppCompatActivity {
     ImageView imageView;
@@ -26,7 +29,10 @@ public class HSV extends AppCompatActivity {
     EditText editTitle;
     Button saveButton;
 
-    private Mat imageMat;
+    private Mat imageMat, originImgMat;
+    private TextView hueValueText;
+    private TextView saturationValueText;
+    private TextView valueValueText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +43,10 @@ public class HSV extends AppCompatActivity {
         editTitle = findViewById(R.id.name_HSV);
         saveButton = findViewById(R.id.save_HSV);
 
+        hueValueText = findViewById(R.id.hueValueText);
+        saturationValueText = findViewById(R.id.saturationValueText);
+        valueValueText = findViewById(R.id.valueValueText);
+
         String imageUriString = getIntent().getStringExtra("imageUri");
         if (imageUriString != null) {
             imageUri = Uri.parse(imageUriString);
@@ -45,15 +55,16 @@ public class HSV extends AppCompatActivity {
 
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            originImgMat = new Mat();
             imageMat = new Mat();
-            Utils.bitmapToMat(bitmap, imageMat);
+            Utils.bitmapToMat(bitmap, originImgMat);
+            originImgMat.copyTo(imageMat);
             imageView.setImageBitmap(bitmap);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         setupHSVAdjustment();
-
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,71 +80,90 @@ public class HSV extends AppCompatActivity {
     }
 
     private void setupHSVAdjustment() {
-        //HSV 값 조정 SeekBar
         SeekBar hueSeekBar = findViewById(R.id.seekBar5);
         SeekBar saturationSeekBar = findViewById(R.id.seekBar6);
         SeekBar valueSeekBar = findViewById(R.id.seekBar7);
 
+        hueSeekBar.setMax(360); // Hue 범위 [-180, 180]을 위해 최대값 360으로 설정
+        hueSeekBar.setProgress(180); // 중간값을 0으로 맞추기 위해 초기값을 180으로 설정
+
+        saturationSeekBar.setMax(200); // Saturation 범위 [0, 2]를 위해 최대값 200으로 설정
+        saturationSeekBar.setProgress(100); // 중간값을 1로 맞추기 위해 초기값을 100으로 설정
+
+        valueSeekBar.setMax(200); // Value 범위 [0, 2]를 위해 최대값 200으로 설정
+        valueSeekBar.setProgress(100); // 중간값을 1로 맞추기 위해 초기값을 100으로 설정
+
         hueSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                adjustHSV(progress, saturationSeekBar.getProgress(), valueSeekBar.getProgress());
+                adjustHSV(hueSeekBar.getProgress(), saturationSeekBar.getProgress(), valueSeekBar.getProgress());
+                hueValueText.setText(String.valueOf(progress - 180)); // 실제 범위 [-180, 180]
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) { }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         });
 
         saturationSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                adjustHSV(hueSeekBar.getProgress(), progress, valueSeekBar.getProgress());
+                adjustHSV(hueSeekBar.getProgress(), saturationSeekBar.getProgress(), valueSeekBar.getProgress());
+                saturationValueText.setText(String.valueOf(progress / 100.0)); // 실제 범위 [0, 2]
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) { }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         });
 
         valueSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 adjustHSV(hueSeekBar.getProgress(), saturationSeekBar.getProgress(), progress);
+                valueValueText.setText(String.valueOf(progress / 100.0)); // 실제 범위 [0, 2]
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) { }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStopTrackingTouch(SeekBar seekBar) { }
         });
     }
 
     private void adjustHSV(int hue, int saturation, int value) {
         Mat hsvMat = new Mat();
-        Imgproc.cvtColor(imageMat, hsvMat, Imgproc.COLOR_BGR2HSV);
-        Core.add(hsvMat, new Scalar(hue, saturation, value), hsvMat);
+        Imgproc.cvtColor(originImgMat, hsvMat, Imgproc.COLOR_BGR2HSV);
+
+        double hueScale = (hue - 180); // [-180, 180]
+        double saturationScale = saturation / 100.0; // [0, 2]
+        double valueScale = value / 100.0; // [0, 2]
+
+        List<Mat> hsvChannels = new ArrayList<>(3);
+        Core.split(hsvMat, hsvChannels);
+
+        // Adjust Hue
+        Core.add(hsvChannels.get(0), new Scalar(hueScale), hsvChannels.get(0));
+        Core.normalize(hsvChannels.get(1), hsvChannels.get(1), 0, 255, Core.NORM_MINMAX);
+
+        // Adjust Saturation
+        hsvChannels.get(1).convertTo(hsvChannels.get(1), -1, saturationScale, 0);
+        Core.normalize(hsvChannels.get(1), hsvChannels.get(1), 0, 255, Core.NORM_MINMAX);
+
+        // Adjust Value
+        hsvChannels.get(2).convertTo(hsvChannels.get(2), -1, valueScale, 0);
+        Core.normalize(hsvChannels.get(2), hsvChannels.get(2), 0, 255, Core.NORM_MINMAX);
+
+        Core.merge(hsvChannels, hsvMat);
         Imgproc.cvtColor(hsvMat, imageMat, Imgproc.COLOR_HSV2BGR);
+
         Bitmap bitmap = Bitmap.createBitmap(imageMat.cols(), imageMat.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(imageMat, bitmap);
         imageView.setImageBitmap(bitmap);
     }
-
 }
