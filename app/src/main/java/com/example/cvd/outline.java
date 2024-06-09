@@ -81,9 +81,9 @@ public class outline extends AppCompatActivity {
                     if (db.isTitleExists(title)) {
                         Toast.makeText(outline.this, "이미 등록된 제목입니다", Toast.LENGTH_SHORT).show();
                     } else {
-                        String filePath = saveBitmapToFile(processedBitmap, title);
+                        Bitmap bitmapToSave = (processedBitmap != null) ? processedBitmap : originalBitmap;
+                        String filePath = saveBitmapToFile(bitmapToSave, title);
                         if (filePath != null) {
-                            //PhotoBookDB db = new PhotoBookDB(outline.this);
                             db.addPhoto(title, filePath); // 이미지 파일 경로를 저장
                             finish(); // 저장 후 종료
                         } else {
