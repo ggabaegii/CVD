@@ -86,6 +86,7 @@ public class outline extends AppCompatActivity {
                         if (filePath != null) {
                             db.addPhoto(title, filePath); // 이미지 파일 경로를 저장
                             finish(); // 저장 후 종료
+                            Toast.makeText(outline.this, "저장 완료", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(outline.this, "이미지 저장 중 오류 발생", Toast.LENGTH_SHORT).show();
                         }
