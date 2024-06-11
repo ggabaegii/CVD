@@ -8,16 +8,12 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.opencv.android.Utils;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
@@ -153,11 +149,7 @@ public class auto extends AppCompatActivity {
                     pixel[1] = 255;
                     pixel[2] = 255;
                 }
-                // Ensure blue color is not altered
-                else if (pixel[0] >= 100 && pixel[0] <= 130) {
-                    // Do nothing for blue color
-                    continue;
-                }
+             
 
                 hsvMat.put(row, col, pixel);
             }
