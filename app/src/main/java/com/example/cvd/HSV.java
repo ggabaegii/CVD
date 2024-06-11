@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,6 +20,8 @@ import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,7 @@ public class HSV extends AppCompatActivity {
     Uri imageUri;
     EditText editTitle;
     Button saveButton;
+    Bitmap changedBitmap;
 
     private Mat imageMat, originImgMat;
     private TextView hueValueText;
@@ -67,13 +71,22 @@ public class HSV extends AppCompatActivity {
         setupHSVAdjustment();
 
         saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View v) {
                 String title = editTitle.getText().toString();
                 if (!title.isEmpty() && imageUri != null) {
                     PhotoBookDB db = new PhotoBookDB(HSV.this);
-                    db.addPhoto(title, imageUri.toString());
-                    finish(); // 저장 후 종료
+                    if (db.isTitleExists(title)) {
+                        Toast.makeText(HSV.this, "이미 등록된 제목입니다", Toast.LENGTH_SHORT).show();
+                    } else {
+                        String filePath = saveBitmapToFile(changedBitmap, title);
+                        if (filePath != null) {
+                            //PhotoBookDB db = new PhotoBookDB(outline.this);
+                            db.addPhoto(title, filePath); // 이미지 파일 경로를 저장
+                            finish(); // 저장 후 종료
+                        } else {
+                            Toast.makeText(HSV.this, "이미지 저장 중 오류 발생", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
             }
         });
@@ -162,8 +175,22 @@ public class HSV extends AppCompatActivity {
         Core.merge(hsvChannels, hsvMat);
         Imgproc.cvtColor(hsvMat, imageMat, Imgproc.COLOR_HSV2BGR);
 
-        Bitmap bitmap = Bitmap.createBitmap(imageMat.cols(), imageMat.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(imageMat, bitmap);
-        imageView.setImageBitmap(bitmap);
+        changedBitmap = Bitmap.createBitmap(imageMat.cols(), imageMat.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(imageMat, changedBitmap);
+        imageView.setImageBitmap(changedBitmap);
+    }
+
+    private String saveBitmapToFile(Bitmap bitmap, String title) {
+        try {
+            File file = new File(getExternalFilesDir(null), title + ".png");
+            FileOutputStream outputStream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            return file.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

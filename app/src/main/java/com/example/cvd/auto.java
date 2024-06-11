@@ -8,14 +8,18 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.IOException;
 
@@ -24,9 +28,11 @@ public class auto extends AppCompatActivity {
     Uri imageUri;
     EditText editTitle;
     Button saveButton;
-    Button autoCorrectButton;
+    ImageView autoCorrectButton;
+    ImageView resetButton; // 되돌리기 버튼 추가
 
     private Mat imageMat;
+    private Bitmap originalBitmap; // 원본 이미지를 저장하는 변수 추가
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,7 @@ public class auto extends AppCompatActivity {
         imageView = findViewById(R.id.auto_imageView);
         editTitle = findViewById(R.id.name_auto);
         saveButton = findViewById(R.id.save_auto);
+        resetButton = findViewById(R.id.return_auto); // 되돌리기 버튼 초기화
 
         String imageUriString = getIntent().getStringExtra("imageUri");
         if (imageUriString != null) {
@@ -44,15 +51,16 @@ public class auto extends AppCompatActivity {
         }
 
         try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            originalBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
             imageMat = new Mat();
-            Utils.bitmapToMat(bitmap, imageMat);
-            imageView.setImageBitmap(bitmap);
+            Utils.bitmapToMat(originalBitmap, imageMat);
+            imageView.setImageBitmap(originalBitmap);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         setupAutoCorrection();
+        setupResetButton(); // 되돌리기 버튼 설정
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +77,6 @@ public class auto extends AppCompatActivity {
 
     @SuppressLint("WrongViewCast")
     private void setupAutoCorrection() {
-
         autoCorrectButton = findViewById(R.id.change_auto);
         autoCorrectButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,52 +86,93 @@ public class auto extends AppCompatActivity {
         });
     }
 
-    private void autoCorrectImage() {
-        Mat correctedMat = imageMat.clone();
-        // 빨간색과 초록색을 감지하여 더 명확하게 보정하는 코드 작성
-        // 예시: 간단한 필터 적용 (실제 구현 시 더 복잡한 로직 필요)
-        Core.inRange(correctedMat, new Scalar(35, 100, 100), new Scalar(85, 255, 255), correctedMat); // 초록색 범위 감지
-        Core.inRange(correctedMat, new Scalar(0, 100, 100), new Scalar(10, 255, 255), correctedMat);  // 빨간색 범위 감지
-
-        Bitmap bitmap = Bitmap.createBitmap(correctedMat.cols(), correctedMat.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(correctedMat, bitmap);
-        imageView.setImageBitmap(bitmap);
-    }
-
-    /*
-    private void setupAutoCorrection1() {
-        Button autoCorrectButton = findViewById(R.id.btn_auto);
-        autoCorrectButton.setOnClickListener(new View.OnClickListener() {
+    private void setupResetButton() {
+        resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                autoCorrectImage1();
+                resetImage();
             }
         });
     }
 
-    private void autoCorrectImage1() {
+    private void autoCorrectImage() {
         Mat correctedMat = imageMat.clone();
-        // 빨간색과 초록색을 노란색과 파란색으로 변경하는 코드 작성
-        // 예시: 간단한 필터 적용 (실제 구현 시 더 복잡한 로직 필요)
-        Core.inRange(correctedMat, new Scalar(35, 100, 100), new Scalar(85, 255, 255), correctedMat); // 초록색 범위 감지
-        Core.inRange(correctedMat, new Scalar(0, 100, 100), new Scalar(10, 255, 255), correctedMat);  // 빨간색 범위 감지
+        applyColorBlindCorrection(correctedMat);
 
-        // 노란색과 파란색으로 변경 로직 추가
-        // 예시: 픽셀 단위로 변경 (실제 구현 시 더 복잡한 로직 필요)
-        for (int i = 0; i < correctedMat.rows(); i++) {
-            for (int j = 0; j < correctedMat.cols(); j++) {
-                double[] pixel = correctedMat.get(i, j);
-                if (pixel[0] == 35) {
-                    correctedMat.put(i, j, new double[]{255, 255, 0}); // 노란색
-                } else if (pixel[0] == 0) {
-                    correctedMat.put(i, j, new double[]{0, 0, 255}); // 파란색
-                }
-            }
-        }
         Bitmap bitmap = Bitmap.createBitmap(correctedMat.cols(), correctedMat.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(correctedMat, bitmap);
         imageView.setImageBitmap(bitmap);
     }
 
-     */
+    private void resetImage() {
+        imageView.setImageBitmap(originalBitmap); // 원본 이미지를 ImageView에 설정
+        Utils.bitmapToMat(originalBitmap, imageMat); // imageMat도 원본으로 복원
+    }
+
+
+    //빨간색, 초록색 색 변환
+    private void applyColorBlindCorrection(Mat imageMat) {
+        // Convert the image from BGRA to BGR if needed
+        boolean isFourChannel = imageMat.channels() == 4;
+        Mat imageMatBGR = new Mat();
+        if (isFourChannel) {
+            Imgproc.cvtColor(imageMat, imageMatBGR, Imgproc.COLOR_BGRA2BGR);
+        } else {
+            imageMatBGR = imageMat;
+        }
+
+        // Noise reduction using Gaussian Blur
+        Mat denoisedMat = new Mat();
+        Imgproc.GaussianBlur(imageMatBGR, denoisedMat, new Size(5, 5), 0);
+
+        // Convert the image to HSV color space
+        Mat hsvMat = new Mat();
+        Imgproc.cvtColor(denoisedMat, hsvMat, Imgproc.COLOR_BGR2HSV);
+
+        // Iterate over each pixel and change red and green colors
+        for (int row = 0; row < hsvMat.rows(); row++) {
+            for (int col = 0; col < hsvMat.cols(); col++) {
+                double[] pixel = hsvMat.get(row, col);
+
+                // Skip color adjustment for very light pixels (white)
+                if (pixel[1] < 30 && pixel[2] > 200) {
+                    continue;
+                }
+
+                // HSV ranges for red color (including pink and orange)
+                if ((pixel[0] >= 110 && pixel[0] <= 180) && (pixel[1] >= 100 && pixel[1] <= 255) && (pixel[2] >= 100 && pixel[2] <= 255)  ) {
+                    // Set to bright red (Hue = 0, Saturation = 255, Value = 255)
+                    pixel[0] = 140;
+                    pixel[1] = 255;
+                    pixel[2] = 255;
+                }
+                // HSV ranges for green color
+                else if (pixel[0] >= 35 && pixel[0] <= 85) {
+                    // Set to bright green (Hue = 60, Saturation = 255, Value = 255)
+                    pixel[0] = 30;
+                    pixel[1] = 255;
+                    pixel[2] = 255;
+                }
+                // Ensure blue color is not altered
+                else if (pixel[0] >= 100 && pixel[0] <= 130) {
+                    // Do nothing for blue color
+                    continue;
+                }
+
+                hsvMat.put(row, col, pixel);
+            }
+        }
+
+        // Convert the HSV image back to BGR color space
+        Mat finalMat = new Mat();
+        Imgproc.cvtColor(hsvMat, finalMat, Imgproc.COLOR_HSV2BGR);
+
+        // If the original image was BGRA, convert the result back to BGRA
+        if (isFourChannel) {
+            Imgproc.cvtColor(finalMat, finalMat, Imgproc.COLOR_BGR2BGRA);
+        }
+
+        // Copy the modified image back to the original image
+        finalMat.copyTo(imageMat);
+    }
 }
